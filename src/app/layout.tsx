@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Road_Rage } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
+import Layout from "@/components/Layout";
 
 const JejuMyeongjo = localFont({
   src: "../../public/fonts/JejuMyeongjo.ttf",
@@ -37,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${JejuMyeongjo.variable} ${RobotoFont.variable} ${RoadRageFont.variable} antialiased`}
       >
-        {children}
+        <Layout>{children}</Layout>
       </body>
     </html>
   );

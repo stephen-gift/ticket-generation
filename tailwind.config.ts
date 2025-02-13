@@ -54,12 +54,30 @@ export default {
           "3": "hsl(var(--chart-3))",
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))"
-        }
+        },
+        deepTeal: "#02191D",
+        aquaMarine: "#24A0B5",
+        oceanBlue: "#197686",
+        pureWhite: "#FAFAFA",
+        lightGray: "#D9D9D9",
+        darkCharcoal: "#0A0C11",
+        deepCyan: "#0E464F",
+        softGray: "#B3B3B3",
+        midnightGreen: "#052228",
+        darkTeal: "#07373F",
+        translucentTeal: "#05252C66",
+        forestGreen: "#052F35",
+        deepForest: "#08252B",
+        translucentCharcoal: "#0A0C111A"
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)"
+      },
+      backgroundImage: {
+        "radial-aqua":
+          "radial-gradient(52.52% 32.71% at 50% 97.66%, rgba(36, 160, 181, 0.20) 0%, rgba(36, 160, 181, 0.00) 100%)"
       }
     }
   },
