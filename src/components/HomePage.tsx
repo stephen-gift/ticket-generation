@@ -27,12 +27,6 @@ const HomePage = () => {
   const { addTicket, currentTicket, updateCurrentTicket, clearCurrentTicket } =
     useTicketStore();
 
-  const [ticketData, setTicketData] = useState<TicketSelectionData | null>(
-    null
-  );
-  const [attendeeData, setAttendeeData] = useState<AttendeeFormValues | null>(
-    currentTicket?.attendee || null
-  );
   const [isTicketFormValid, setIsTicketFormValid] = useState(false);
   const [isAttendeeFormValid, setIsAttendeeFormValid] = useState(false);
 
@@ -67,7 +61,6 @@ const HomePage = () => {
   };
 
   const handleTicketSubmit = (data: TicketSelectionData) => {
-    setTicketData(data);
     setIsTicketFormValid(true);
     updateCurrentTicket({
       ...currentTicket,
@@ -76,7 +69,6 @@ const HomePage = () => {
   };
 
   const handleAttendeeSubmit = (data: AttendeeFormValues) => {
-    setAttendeeData(data);
     setIsAttendeeFormValid(true);
     updateCurrentTicket({ ...currentTicket, attendee: data });
   };
@@ -100,16 +92,12 @@ const HomePage = () => {
         break;
       case "Download Ticket":
         setCurrentStep(1);
-        setTicketData(null);
-        setAttendeeData(null);
         setIsTicketFormValid(false);
         setIsAttendeeFormValid(false);
         setCurrentStep(1);
         break;
       case "Book Another Ticket":
         setCurrentStep(1);
-        setTicketData(null);
-        setAttendeeData(null);
         setIsTicketFormValid(false);
         setIsAttendeeFormValid(false);
         setCurrentStep(1);
