@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState, Suspense } from "react";
 import FormWrapper from "./FormWrapper";
 import { useRouter, useSearchParams } from "next/navigation";
 import TicketSelection from "./TicketSelection";
@@ -20,7 +20,7 @@ export type ActionType =
 
 const totalSteps = 3;
 
-const HomePage = () => {
+const HomePageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -95,12 +95,14 @@ const HomePage = () => {
         setIsTicketFormValid(false);
         setIsAttendeeFormValid(false);
         setCurrentStep(1);
+        clearCurrentTicket();
         break;
       case "Book Another Ticket":
         setCurrentStep(1);
         setIsTicketFormValid(false);
         setIsAttendeeFormValid(false);
         setCurrentStep(1);
+        clearCurrentTicket();
         break;
       default:
         break;
@@ -182,5 +184,11 @@ const HomePage = () => {
     </FormWrapper>
   );
 };
+
+const HomePage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <HomePageContent />
+  </Suspense>
+);
 
 export default HomePage;
