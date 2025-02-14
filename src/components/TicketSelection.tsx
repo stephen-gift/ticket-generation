@@ -264,7 +264,7 @@ const TicketSelection = ({
           name="numberOfTickets"
           render={({ field }) => (
             <FormItem className="space-y-2 w-full">
-              <FormLabel className="text-sm font-medium text-white-pure">
+              <FormLabel className="text-sm font-medium text-white">
                 Number of Tickets
               </FormLabel>
               <Select
