@@ -13,9 +13,18 @@ type EventBannerProps = {
 };
 const EventBanner = ({ event }: EventBannerProps) => {
   return (
-    <Card className="bg-transparent border-none text-white-pure">
-      <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-        <h2 className="text-3xl font-bold mb-2">{event.name}</h2>
+    <Card className="bg-transparent border-none text-[#fafafa] p-0 ">
+      <CardContent
+        className="flex flex-col items-center font-roboto justify-center p-3 sm:p-6 text-center rounded-[24px] border-r-2 border-b-2 border-l-2 border-[#07373F]"
+        style={{
+          background:
+            "radial-gradient(57.42% 106.59% at 14.02% 32.06%, rgba(36, 160, 181, 0.20) 0%, rgba(36, 160, 181, 0.00) 100%), rgba(10, 12, 17, 0.10)",
+          backdropFilter: "blur(7px)"
+        }}
+      >
+        <h2 className="text-6xl font-bold font-roadrage text-[#fafafa] mb-2 tracking-widest">
+          {event.name}
+        </h2>
         <p className="text-lg mb-2">
           Join us for an unforgettable experience at {event.name}! Secure your
           spot now.

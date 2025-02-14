@@ -20,17 +20,6 @@ export type ActionType =
 
 const totalSteps = 3;
 
-const isTicketComplete = (ticket: Partial<Ticket>): ticket is Ticket => {
-  return (
-    !!ticket.event &&
-    !!ticket.ticketType &&
-    !!ticket.price &&
-    !!ticket.numberOfTickets &&
-    !!ticket.total &&
-    !!ticket.attendee
-  );
-};
-
 const HomePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();

@@ -15,7 +15,7 @@ import Image from "next/image";
 const navItems = [
   { title: "Events", href: "/" },
   { title: "My Tickets", href: "/my-tickets" },
-  { title: "About Project", href: "/about" }
+  { title: "About Project", href: "#" }
 ];
 
 const Header = () => {
@@ -23,19 +23,12 @@ const Header = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative rounded-3xl border border-[#197686]">
       <header className="sticky top-0 w-full text-white z-50 p-4 flex items-center justify-between">
         {/* Mobile Drawer */}
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
-            <Image
-              src="/images/Logo.png"
-              alt="logo"
-              //   sizes="100vw"
-
-              width={92}
-              height={36}
-            />
+            <Image src="/images/Logo.png" alt="logo" width={92} height={36} />
           </DrawerTrigger>
           <DrawerContent className="bg-[#0C212B] text-white p-6 ">
             <DrawerTitle>Are you absolutely sure?</DrawerTitle>

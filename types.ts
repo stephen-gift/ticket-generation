@@ -46,18 +46,18 @@ export interface ImageUploaderProps {
 
 export interface TheTicketComponentProps {
   ticketDetails: {
-    name: string;
-    email: string;
+    name?: string;
+    email?: string;
     photo?: string;
     specialRequest?: string;
-    ticketType: string;
-    numberOfTickets: number;
+    ticketType?: string;
+    numberOfTickets?: number;
   };
-  eventInfo: {
-    title: string;
-    location: string;
-    date: string;
-    time: string;
+  eventInfo?: {
+    title?: string;
+    location?: string;
+    date?: string;
+    time?: string;
   };
   isStep?: boolean;
 }

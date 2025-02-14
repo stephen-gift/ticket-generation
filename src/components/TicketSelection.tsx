@@ -216,12 +216,12 @@ const TicketSelection = ({
         className="w-full flex flex-col gap-6"
       >
         {/* Carousel Section */}
-        <div className="w-full flex flex-col items-center gap-2 self-stretch p-6 border-r-2 border-b-2 border-l-2 border-[#07373F] rounded-[24px] backdrop-blur-[7px]">
+        <div className="w-full flex flex-col items-center p-2 sm:p-6  justify-center border-r-2 border-b-2 border-l-2 border-[#07373F] rounded-[24px] backdrop-blur-[7px]">
           <Carousel className="w-full max-w-lg mx-auto" setApi={setCarouselApi}>
             <CarouselContent>
               {EVENTS.map((event, index) => (
                 <CarouselItem key={index}>
-                  <div className="p-1">
+                  <div className="">
                     <EventBanner event={event} />
                   </div>
                 </CarouselItem>
@@ -240,8 +240,10 @@ const TicketSelection = ({
           name="ticketType"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="text-white">Select Ticket Type:</FormLabel>
-              <div className="rounded-[24px] bg-[#052228] border border-[#07373F] p-3 flex flex-col md:flex-row self-stretch gap-6">
+              <FormLabel className="text-white font-roboto">
+                Select Ticket Type:
+              </FormLabel>
+              <div className="rounded-[24px] bg-[#052228] border border-[#07373F] p-3 flex flex-col md:flex-row self-stretch gap-6 ">
                 {TICKETS.map((ticket) => (
                   <TicketOption
                     key={ticket.type}
@@ -278,11 +280,11 @@ const TicketSelection = ({
                 }}
               >
                 <FormControl>
-                  <SelectTrigger className="w-full border border-[#07373F] text-white-pure">
+                  <SelectTrigger className="w-full border border-[#07373F] text-white rounded-[12px] ">
                     <SelectValue placeholder="Select number" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-[#07373F] border-[#07373F] text-white-pure">
+                <SelectContent className="bg-[#07373F] border-[#07373F] text-white">
                   {[1, 2, 3, 4, 5].map((num) => (
                     <SelectItem key={num} value={num.toString()}>
                       {num}

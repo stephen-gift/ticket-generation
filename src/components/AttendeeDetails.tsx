@@ -76,7 +76,10 @@ const AttendeeDetails = ({
         className="space-y-6 w-full"
       >
         <ImageUploader
-          onImageUpload={(url) => form.setValue("image", url)}
+          onImageUpload={(url) => {
+            console.log(url);
+            form.setValue("image", url);
+          }}
           initialImage={currentTicket?.attendee?.image}
         />
 
@@ -85,9 +88,13 @@ const AttendeeDetails = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enter your name</FormLabel>
+              <FormLabel className="text-white">Enter your name</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} />
+                <Input
+                  className="text-white"
+                  placeholder="Your name"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,7 +106,7 @@ const AttendeeDetails = ({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enter your email *</FormLabel>
+              <FormLabel className="text-white">Enter your email *</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Mail
@@ -107,7 +114,7 @@ const AttendeeDetails = ({
                     size={18}
                   />
                   <Input
-                    className="pl-10"
+                    className="pl-10 text-white"
                     placeholder="hello@example.com"
                     {...field}
                   />
@@ -123,9 +130,13 @@ const AttendeeDetails = ({
           name="request"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Special request?</FormLabel>
+              <FormLabel className="text-white">Special request?</FormLabel>
               <FormControl>
-                <Textarea placeholder="Your message..." {...field} />
+                <Textarea
+                  className="text-white"
+                  placeholder="Your message..."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

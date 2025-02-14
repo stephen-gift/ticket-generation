@@ -1,5 +1,6 @@
 import React from "react";
 import { TheTicketComponentProps } from "../../types";
+import Image from "next/image";
 
 const TheTicketComponent = ({
   ticketDetails,
@@ -36,19 +37,19 @@ const TheTicketComponent = ({
         <div className="space-y-5 relative z-20 border-2 border-greenone p-[14px] rounded-[16px]">
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-5xl text-center font-roadrage mb-3">
-              {eventInfo.title}
+              {eventInfo?.title}
             </h1>
             <div className="space-y-1">
               <div className="flex items-center text-center justify-center gap-2">
                 <span className="text-cyan-400 hidden sm:block">📍</span>
                 <span className="text-sm sm:text-base">
-                  {eventInfo.location}
+                  {eventInfo?.location}
                 </span>
               </div>
               <div className="flex items-center text-center justify-center gap-2">
                 <span className="text-cyan-400 hidden sm:block">📅</span>
                 <span className="text-sm sm:text-base">
-                  {eventInfo.date} | {eventInfo.time}
+                  {eventInfo?.date} | {eventInfo?.time}
                 </span>
               </div>
             </div>
@@ -57,10 +58,13 @@ const TheTicketComponent = ({
           {/* Profile Photo */}
           <div className="relative flex justify-center mb-3">
             <div className="border-4 border-greenone/50 w-[100px] sm:w-[120px] md:w-[140px] h-[100px] sm:h-[120px] md:h-[140px] rounded-xl overflow-hidden">
-              <img
+              <Image
                 src={ticketDetails.photo || "/api/placeholder/400/400"}
                 alt="Profile"
+                width={140}
+                height={140}
                 className="w-full h-full object-cover"
+                priority
               />
             </div>
           </div>
@@ -177,7 +181,13 @@ const TheTicketComponent = ({
 
         {/* Barcode */}
         <div className="flex relative z-20 justify-center items-center">
-          <img src="/api/placeholder/336/68" alt="barcode" />
+          <Image
+            src="/images/BarCode.png"
+            alt="barcode"
+            width={336}
+            height={68}
+            priority
+          />
         </div>
 
         {/* Bottom corners */}

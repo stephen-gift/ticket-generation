@@ -6,6 +6,7 @@ import axios, { AxiosError } from "axios";
 import { Loader2, Trash2, UploadCloud } from "lucide-react";
 import Image from "next/image";
 import { ImageUploaderProps } from "../../types";
+import { useTicketStore } from "../../store";
 
 const CLOUDINARY_UPLOAD_PRESET = "tickets";
 const CLOUDINARY_CLOUD_NAME = "dbsmpdrck";
@@ -13,6 +14,7 @@ const CLOUDINARY_CLOUD_NAME = "dbsmpdrck";
 const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
   const [image, setImage] = useState<string | null>(initialImage || null);
   const [loading, setLoading] = useState(false);
+  const { currentTicket, updateCurrentTicket } = useTicketStore();
 
   useEffect(() => {
     if (initialImage) {
@@ -27,15 +29,27 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
+      console.log("Uploading file to Cloudinary...", file);
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
         formData
       );
 
-      setImage(res.data.secure_url);
-      onImageUpload(res.data.secure_url);
+      console.log("Upload response:", res.data);
+      const imageUrl = res.data.secure_url;
+      setImage(imageUrl);
+      onImageUpload(imageUrl);
+
+      // Update the current ticket with the new image URL
+      updateCurrentTicket({
+        attendee: {
+          ...currentTicket?.attendee,
+          image: imageUrl
+        }
+      });
     } catch (error) {
-      const axiosError = error as AxiosError; // Type assertion for Axios error
+      const axiosError = error as AxiosError;
+      console.error("Upload failed:", axiosError);
       alert(`Upload failed! Try again: ${axiosError.message}`);
     }
     setLoading(false);
@@ -50,50 +64,56 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center gap-8 p-6 w-full bg-[#052228] rounded-3xl">
+    <div className="flex flex-col justify-center items-center gap-8 p-6 w-full bg-[#052228] rounded-3xl ">
       <h2 className="text-lg font-semibold text-white text-start w-full text-white-pure">
         Upload Profile Photo
       </h2>
       <div className="w-full bg-[#00000033] flex justify-center items-center">
-        {!image ? (
-          <div
-            {...getRootProps()}
-            className="border-2 border-[rgba(36, 160, 181, 0.50)] bg-[#0E464F] w-full  text-white-pure max-w-64 h-64 flex flex-col items-center justify-center rounded-[32px] cursor-pointer hover:bg-[#1b3d42e7] transition"
-          >
-            <input {...getInputProps()} />
-            {loading ? (
+        <div
+          className="border-2 border-[rgba(36, 160, 181, 0.50)] w-full text-white-pure max-w-64 h-64 flex flex-col items-center justify-center rounded-[32px] cursor-pointer hover:bg-[#0E464Fe7] transition relative  border-4 border-[rgba(36,160,181,0.50)] bg-[#0E464F]"
+          {...getRootProps()}
+        >
+          <input {...getInputProps()} />
+          {!image ? (
+            loading ? (
               <Loader2 className="animate-spin text-teal-500 w-8 h-8" />
             ) : (
               <>
                 <UploadCloud className="text-teal-400 w-8 h-8" />
                 <p className="mt-2 text-sm">Drag & drop or click to upload</p>
               </>
-            )}
-          </div>
-        ) : (
-          <div className="relative">
-            <Image
-              src={image}
-              alt="Uploaded"
-              sizes="100vw"
-              style={{
-                width: "100%",
-                height: "auto"
-              }}
-              width={500}
-              height={300}
-            />
-            <button
-              onClick={() => {
-                setImage(null);
-                onImageUpload("");
-              }}
-              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+            )
+          ) : (
+            <>
+              <Image
+                src={image}
+                alt="Uploaded"
+                fill
+                className="object-cover rounded-[32px]"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity rounded-[32px]">
+                <UploadCloud className="text-teal-400 w-8 h-8" />
+                <p className="mt-2 text-sm text-white">Click to change</p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the dropzone
+                  setImage(null);
+                  onImageUpload("");
+                  updateCurrentTicket({
+                    attendee: {
+                      ...currentTicket?.attendee,
+                      image: ""
+                    }
+                  });
+                }}
+                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

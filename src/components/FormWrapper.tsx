@@ -5,7 +5,7 @@ import { ActionType } from "./HomePage";
 
 interface FormWrapperProps {
   children: React.ReactNode;
-  currentStep: number; // now 1-indexed
+  currentStep: number;
   totalSteps: number;
   title: string;
   buttons: {
@@ -23,15 +23,16 @@ const FormWrapper = ({
   title,
   totalSteps
 }: FormWrapperProps) => {
-  // Calculate progress based on human-readable step numbers.
   const progressValue = (currentStep / totalSteps) * 100;
 
   return (
     <div className="max-w-[700px] mx-auto rounded-[24px] border border-[#0E464F] bg-[#041E23] flex p-3 sm:p-6 md:p-10 lg:p-12 flex-col justify-center items-center gap-[32px] w-full">
       <div className="w-full">
-        <div className="flex justify-between items-center w-full">
-          <p className="text-white">{title}</p>
-          <p>
+        <div className="flex  sm:justify-between flex-col sm:flex-row sm:items-center items-start w-full">
+          <p className="text-white font-jeju font-normal text-[32px]">
+            {title}
+          </p>
+          <p className="font-roboto text-base text-white">
             Step {currentStep}/{totalSteps}
           </p>
         </div>
@@ -41,7 +42,7 @@ const FormWrapper = ({
       <div className="flex p-0 sm:p-[8px] md:p-[16px] lg:p-[24px] flex-col justify-center items-start gap-[32px] self-stretch rounded-[32px]  sm:bg-[#08252B] w-full">
         {children}
 
-        <div className="flex justify-between flex-col md:flex-row items-center w-full gap-4 mt-4">
+        <div className="flex justify-between flex-col-reverse md:flex-row items-center w-full gap-4 mt-4">
           <div className="flex flex-1 gap-2 w-full md:w-auto">
             {buttons.left.map((btn) => (
               <Button
@@ -59,7 +60,7 @@ const FormWrapper = ({
             {buttons.right.map((btn) => (
               <Button
                 key={btn}
-                className="w-full px-6 py-3 rounded-lg text-white font-medium border border-[#0E464F] bg-[#197686] hover:bg-[#156575]"
+                className="w-full px-6 py-3 rounded-lg text-white text-base font-jeju font-medium border border-[#0E464F] bg-[#197686] hover:bg-[#156575]"
                 onClick={() => onAction(btn as ActionType)}
               >
                 {btn}
