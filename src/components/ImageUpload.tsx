@@ -40,10 +40,11 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
       setImage(imageUrl);
       onImageUpload(imageUrl);
 
-      // Update the current ticket with the new image URL
       updateCurrentTicket({
         attendee: {
           ...currentTicket?.attendee,
+          name: currentTicket?.attendee?.name || "",
+          email: currentTicket?.attendee?.email || "",
           image: imageUrl
         }
       });
@@ -97,12 +98,14 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
               </div>
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering the dropzone
+                  e.stopPropagation();
                   setImage(null);
                   onImageUpload("");
                   updateCurrentTicket({
                     attendee: {
                       ...currentTicket?.attendee,
+                      name: currentTicket?.attendee?.name || "",
+                      email: currentTicket?.attendee?.email || "",
                       image: ""
                     }
                   });
