@@ -68,7 +68,17 @@ export default {
         translucentTeal: "#05252C66",
         forestGreen: "#052F35",
         deepForest: "#08252B",
-        translucentCharcoal: "#0A0C111A"
+        translucentCharcoal: "#0A0C111A",
+
+        greenone: "#24A0B5",
+        greentwo: "#041E23",
+        greenthree: "#0E464F",
+        greenfour: "#08252B",
+        greenfive: "#052228",
+        borderone: "#198686",
+        bordertwo: "#0E464F",
+        borderthree: "#07373F",
+        lightgrey: "#FAFAFA"
       },
       borderRadius: {
         lg: "var(--radius)",
