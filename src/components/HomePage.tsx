@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState, Suspense } from "react";
+import React, {
+  ReactNode,
+  useEffect,
+  useState,
+  Suspense,
+  useCallback
+} from "react";
 import FormWrapper from "./FormWrapper";
 import { useRouter, useSearchParams } from "next/navigation";
 import TicketSelection from "./TicketSelection";
@@ -38,6 +44,55 @@ const HomePageContent = () => {
     initialStep >= 1 && initialStep <= totalSteps ? initialStep : 1
   );
 
+  const isTicketSelectionValid = useCallback(() => {
+    return !!(
+      currentTicket?.event &&
+      currentTicket.ticketType &&
+      currentTicket.price &&
+      currentTicket.numberOfTickets
+    );
+  }, [
+    currentTicket?.event,
+    currentTicket?.ticketType,
+    currentTicket?.price,
+    currentTicket?.numberOfTickets
+  ]);
+
+  const isAttendeeDetailsValid = useCallback(() => {
+    return !!(
+      currentTicket?.attendee?.name &&
+      currentTicket?.attendee?.email &&
+      currentTicket?.attendee?.image
+    );
+  }, [
+    currentTicket?.attendee?.name,
+    currentTicket?.attendee?.email,
+    currentTicket?.attendee?.image
+  ]);
+
+  // Combined validation effect
+  useEffect(() => {
+    const validateCurrentStep = () => {
+      switch (currentStep) {
+        case 2:
+          if (!isTicketSelectionValid()) {
+            router.replace("/?step=1");
+            return false;
+          }
+          break;
+        case 3:
+          if (!isAttendeeDetailsValid()) {
+            router.replace("/?step=2");
+            return false;
+          }
+          break;
+      }
+      return true;
+    };
+
+    validateCurrentStep();
+  }, [currentStep, isTicketSelectionValid, isAttendeeDetailsValid, router]);
+
   useEffect(() => {
     const urlStep = searchParams.get("step");
     if (urlStep !== String(currentStep)) {
@@ -60,18 +115,24 @@ const HomePageContent = () => {
     clearCurrentTicket();
   };
 
-  const handleTicketSubmit = (data: TicketSelectionData) => {
-    setIsTicketFormValid(true);
-    updateCurrentTicket({
-      ...currentTicket,
-      ...data
-    });
-  };
+  const handleTicketSubmit = useCallback(
+    (data: TicketSelectionData) => {
+      setIsTicketFormValid(true);
+      updateCurrentTicket({
+        ...currentTicket,
+        ...data
+      });
+    },
+    [currentTicket, updateCurrentTicket]
+  );
 
-  const handleAttendeeSubmit = (data: AttendeeFormValues) => {
-    setIsAttendeeFormValid(true);
-    updateCurrentTicket({ ...currentTicket, attendee: data });
-  };
+  const handleAttendeeSubmit = useCallback(
+    (data: AttendeeFormValues) => {
+      setIsAttendeeFormValid(true);
+      updateCurrentTicket({ ...currentTicket, attendee: data });
+    },
+    [currentTicket, updateCurrentTicket]
+  );
 
   const handleAction = (action: ActionType): void => {
     switch (action) {
@@ -85,7 +146,7 @@ const HomePageContent = () => {
         handleCancel();
         break;
       case "Get My Free Ticket":
-        if (currentTicket) {
+        if (currentTicket && isAttendeeDetailsValid()) {
           addTicket(currentTicket as Ticket);
           handleNext();
         }
@@ -116,7 +177,6 @@ const HomePageContent = () => {
           <TicketSelection
             onSubmit={handleTicketSubmit}
             onValidityChange={(isValid) => {
-              console.log("Ticket form validity:", isValid);
               setIsTicketFormValid(isValid);
             }}
           />
@@ -130,7 +190,7 @@ const HomePageContent = () => {
         );
       case 3:
         return (
-          <div className="text-white w-full">
+          <div className="text-white w-full flex flex-col justify-center items-center p-2 gap-4 text-center">
             <h2 className="font-extrabold">Your Ticket is Booked</h2>
             <p>You can download or Check your email for a copy</p>
             <TicketSection />

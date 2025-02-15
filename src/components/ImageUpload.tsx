@@ -29,13 +29,11 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
-      console.log("Uploading file to Cloudinary...", file);
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
         formData
       );
 
-      console.log("Upload response:", res.data);
       const imageUrl = res.data.secure_url;
       setImage(imageUrl);
       onImageUpload(imageUrl);
@@ -50,7 +48,6 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
       });
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.error("Upload failed:", axiosError);
       alert(`Upload failed! Try again: ${axiosError.message}`);
     }
     setLoading(false);

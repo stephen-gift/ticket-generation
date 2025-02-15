@@ -4,9 +4,8 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
+  CarouselDots,
+  CarouselItem
 } from "./ui/carousel";
 import { TicketFormValues, ticketSchema } from "@/lib/schema";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -54,18 +53,6 @@ export const EVENTS: Event[] = [
     location: "Online Event",
     date: "June 10, 2025",
     time: "5:00 PM"
-  },
-  {
-    name: "DevSummit 2025",
-    location: "Silicon Valley Expo",
-    date: "April 22, 2025",
-    time: "9:00 AM"
-  },
-  {
-    name: "Next.js Conference",
-    location: "Online Event",
-    date: "June 10, 2025",
-    time: "5:00 PM"
   }
 ];
 
@@ -78,21 +65,26 @@ const TicketSelection = ({
 
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketSchema),
-    defaultValues: currentTicket ?? {
-      event: EVENTS[0],
-      ticketType: "",
-      numberOfTickets: 1
+    defaultValues: {
+      event: currentTicket?.event ?? EVENTS[0],
+      ticketType: currentTicket?.ticketType ?? "",
+      numberOfTickets: currentTicket?.numberOfTickets ?? 1
     },
     mode: "onChange"
   });
 
   useEffect(() => {
     if (currentTicket) {
-      form.reset({
-        event: currentTicket.event ?? EVENTS[0],
-        ticketType: currentTicket.ticketType ?? "",
-        numberOfTickets: currentTicket.numberOfTickets
-      });
+      form.reset(
+        {
+          event: currentTicket.event ?? EVENTS[0],
+          ticketType: currentTicket.ticketType ?? "",
+          numberOfTickets: currentTicket.numberOfTickets ?? 1
+        },
+        {
+          keepDefaultValues: true
+        }
+      );
     }
   }, [currentTicket, form]);
 
@@ -120,7 +112,8 @@ const TicketSelection = ({
 
     updateCurrentTicket({
       ...currentTicket,
-      event
+      event,
+      numberOfTickets: form.getValues().numberOfTickets
     });
   }, [carouselApi, form, updateCurrentTicket, currentTicket]);
 
@@ -136,9 +129,7 @@ const TicketSelection = ({
   useEffect(() => {
     const subscription = form.watch(async (data) => {
       const isValid = form.formState.isValid;
-      console.log("Form values:", data);
-      console.log("Form errors:", form.formState.errors);
-      console.log("Form isValid:", isValid);
+
       onValidityChange?.(isValid);
 
       if (form.formState.isValid) {
@@ -220,8 +211,7 @@ const TicketSelection = ({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselDots />
           </Carousel>
         </div>
 
@@ -262,12 +252,21 @@ const TicketSelection = ({
                 Number of Tickets
               </FormLabel>
               <Select
-                value={field.value?.toString() ?? "1"}
+                value={field.value?.toString()}
                 onValueChange={(value) => {
-                  field.onChange(Number(value));
+                  const numTickets = Number(value);
+                  field.onChange(numTickets);
+
+                  // Update store with current values
+                  const selectedTicket = TICKETS.find(
+                    (ticket) => ticket.type === form.getValues().ticketType
+                  );
+                  const total = (selectedTicket?.price ?? 0) * numTickets;
+
                   updateCurrentTicket({
                     ...form.getValues(),
-                    numberOfTickets: Number(value)
+                    numberOfTickets: numTickets,
+                    total
                   });
                 }}
               >

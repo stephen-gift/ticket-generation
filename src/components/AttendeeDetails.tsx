@@ -16,12 +16,14 @@ import { Mail } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import ImageUploader from "./ImageUpload";
 import { useTicketStore } from "../../store";
+import { useRouter } from "next/navigation";
 
 const AttendeeDetails = ({
   onSubmit,
   onValidityChange
 }: AttendeeDetailsProps) => {
   const { currentTicket, updateCurrentTicket } = useTicketStore();
+  const router = useRouter();
 
   const form = useForm<AttendeeFormValues>({
     resolver: zodResolver(attendeeSchema),
@@ -34,8 +36,20 @@ const AttendeeDetails = ({
     mode: "onChange"
   });
 
+  // Check if the ticket section is valid
+  useEffect(() => {
+    if (
+      !currentTicket?.event ||
+      !currentTicket.ticketType ||
+      !currentTicket.price ||
+      !currentTicket.numberOfTickets
+    ) {
+      // Redirect to step 1 if the ticket section is invalid
+      router.push("/?step=1");
+    }
+  }, [currentTicket, router]);
+
   const onSubmitHandler = (data: AttendeeFormValues) => {
-    console.log("Form Data:", data);
     onSubmit(data);
   };
 
@@ -57,18 +71,18 @@ const AttendeeDetails = ({
   }, [currentTicket?.attendee, form]);
 
   useEffect(() => {
-    const subscription = form.watch(() => {
-      if (form.formState.isValid) {
-        const data = form.getValues();
+    const subscription = form.watch((values) => {
+      const isValid = !!values.name && !!values.email && !!values.image;
+      onValidityChange?.(isValid);
+      if (isValid) {
         updateCurrentTicket({
-          attendee: data
+          attendee: values as AttendeeFormValues
         });
-        onSubmit(data);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [form, onSubmit, updateCurrentTicket]);
+  }, [form, onValidityChange, updateCurrentTicket]);
   return (
     <Form {...form}>
       <form
@@ -77,7 +91,6 @@ const AttendeeDetails = ({
       >
         <ImageUploader
           onImageUpload={(url) => {
-            console.log(url);
             form.setValue("image", url);
           }}
           initialImage={currentTicket?.attendee?.image}
