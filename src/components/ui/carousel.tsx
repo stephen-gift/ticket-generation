@@ -264,7 +264,8 @@ const CarouselDots = () => {
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
   const onDotClick = React.useCallback(
-    (index: number) => {
+    (index: number, e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault(); // Prevent default behavior
       if (!api) return; // Ensure api is defined
       api.scrollTo(index);
     },
@@ -297,9 +298,9 @@ const CarouselDots = () => {
   return (
     <div className="flex justify-center gap-2 mt-4">
       {scrollSnaps.map((_, index) => (
-        <button
+        <Button
           key={index}
-          onClick={() => onDotClick(index)}
+          onClick={(e) => onDotClick(index, e)}
           className={`w-2 h-2 rounded-full transition-colors ${
             index === selectedIndex ? "bg-deepCyan" : "bg-gray-300 opacity-50"
           }`}
