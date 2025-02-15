@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 const navItems = [
   { title: "Events", href: "/" },
@@ -68,8 +69,9 @@ const Header = () => {
         </div>
 
         {/* CTA Button */}
-        <Button className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200">
-          MY TICKETS →
+        <Button className="group bg-white flex justify-center items-center text-black px-4 py-2 rounded-md hover:bg-[#24A0B5] transition-colors duration-300">
+          MY TICKETS
+          <ArrowRight className="ml-2 transition-transform duration-300 group-hover:-rotate-45" />
         </Button>
       </header>
     </div>
