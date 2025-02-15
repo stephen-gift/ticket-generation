@@ -31,14 +31,16 @@ const Header = () => {
             <Image src="/images/Logo.png" alt="logo" width={92} height={36} />
           </DrawerTrigger>
           <DrawerContent className="bg-[#0C212B] text-white p-6 ">
-            <DrawerTitle>Tickets</DrawerTitle>
-            <nav className="flex flex-col gap-4">
+            <DrawerTitle className="flex justify-center items-center mt-3">
+              <Image src="/images/Logo.png" alt="logo" width={92} height={36} />
+            </DrawerTitle>
+            <nav className="mt-3 flex flex-col gap-4">
               {navItems.map(({ title, href }) => (
                 <Link
                   key={href}
                   href={href}
                   className={`hover:text-gray-300 ${
-                    pathname === href ? "text-[#F5B503]" : ""
+                    pathname === href ? "text-[#FFFFFF]" : "text-[#B3B3B3]"
                   }`}
                 >
                   {title}
@@ -56,7 +58,7 @@ const Header = () => {
                 key={href}
                 href={href}
                 className={`hover:text-gray-300 ${
-                  pathname === href ? "text-[#F5B503]" : ""
+                  pathname === href ? "text-[#FFFFFF]" : "text-[#B3B3B3]"
                 }`}
               >
                 {title}

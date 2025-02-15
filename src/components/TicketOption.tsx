@@ -14,7 +14,7 @@ const TicketOption = ({
     <div
       onClick={onSelect}
       className={cn(
-        "p-2 font-roboto rounded-lg cursor-pointer w-full transition text-white  border-2 border-[#197686] ",
+        "p-2 font-roboto rounded-lg cursor-pointer w-full transition text-white  border-2 border-[#197686] hover:bg-[#2C545B] ",
         isSelected
           ? "rounded-[12px] border-2 border-[#197686] bg-[#12464E]"
           : ""
