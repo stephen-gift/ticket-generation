@@ -206,7 +206,7 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute  h-8 w-8 rounded-full",
+        "absolute  h-8 w-8 rounded-full bg-deepCyan ",
         orientation === "horizontal"
           ? "-left-12 top-1/2 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -219,7 +219,7 @@ const CarouselPrevious = React.forwardRef<
       }}
       {...props}
     >
-      <ArrowLeft className="h-4 w-4" />
+      <ArrowLeft color={"#ffffff"} className="h-4 w-4" />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -258,11 +258,63 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
+const CarouselDots = () => {
+  const { api } = useCarousel();
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
+
+  const onDotClick = React.useCallback(
+    (index: number) => {
+      if (!api) return; // Ensure api is defined
+      api.scrollTo(index);
+    },
+    [api]
+  );
+
+  const onInit = React.useCallback((api: CarouselApi) => {
+    if (!api) return; // Ensure api is defined
+    setScrollSnaps(api.scrollSnapList());
+  }, []);
+
+  const onSelect = React.useCallback((api: CarouselApi) => {
+    if (!api) return; // Ensure api is defined
+    setSelectedIndex(api.selectedScrollSnap());
+  }, []);
+
+  React.useEffect(() => {
+    if (!api) return; // Ensure api is defined
+
+    onInit(api);
+    onSelect(api);
+    api.on("reInit", onInit);
+    api.on("select", onSelect);
+
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api, onInit, onSelect]);
+
+  return (
+    <div className="flex justify-center gap-2 mt-4">
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onDotClick(index)}
+          className={`w-2 h-2 rounded-full transition-colors ${
+            index === selectedIndex ? "bg-deepCyan" : "bg-gray-300 opacity-50"
+          }`}
+        />
+      ))}
+    </div>
+  );
+};
+
 export {
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
-  CarouselNext
+  CarouselNext,
+  CarouselDots
 };
