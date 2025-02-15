@@ -76,11 +76,6 @@ const TicketSelection = ({
   const { currentTicket, updateCurrentTicket } = useTicketStore();
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
 
-  console.log(
-    "Rendering TicketSelection. Current ticket in store:",
-    currentTicket
-  );
-
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketSchema),
     defaultValues: currentTicket ?? {
@@ -93,10 +88,8 @@ const TicketSelection = ({
     mode: "onChange"
   });
 
-  console.log("Form initialized with default values:", form.getValues());
   useEffect(() => {
     if (currentTicket) {
-      console.log("Resetting form with currentTicket:", currentTicket);
       form.reset({
         event: currentTicket.event ?? EVENTS[0],
         ticketType: currentTicket.ticketType ?? "",
@@ -119,7 +112,6 @@ const TicketSelection = ({
     );
 
     if (eventIndex !== -1) {
-      console.log("Syncing carousel to event index:", eventIndex);
       carouselApi.scrollTo(eventIndex);
     }
   }, [carouselApi, currentTicket?.event]);
@@ -151,7 +143,6 @@ const TicketSelection = ({
     const subscription = form.watch(async (data) => {
       if (form.formState.isValid) {
         const total = (data.price ?? 0) * (data.numberOfTickets ?? 1);
-        console.log("Updating store with:", { ...data, total });
 
         const safeEvent: Event = {
           name: data.event?.name ?? "",
@@ -168,7 +159,6 @@ const TicketSelection = ({
           total
         });
       } else {
-        console.log("Form is invalid, skipping update.");
       }
     });
 
@@ -181,34 +171,27 @@ const TicketSelection = ({
     onValidityChange?.(isValid);
   }, [form, onValidityChange]);
 
-  // Form watcher for real-time updates
-
   const handleTicketSelect = useCallback(
     (ticket: TicketType) => {
-      console.log("Ticket selected:", ticket);
-
       form.setValue("ticketType", ticket.type);
-      form.setValue("price", ticket.price);
-
+      form.setValue("price", Number(ticket.price));
       updateCurrentTicket({
-        ...currentTicket, // Keep existing ticket data
+        ...currentTicket,
         ticketType: ticket.type,
-        price: ticket.price
+        price: Number(ticket.price)
       });
-
-      console.log("Updated Zustand store with new ticket type.");
     },
     [form, updateCurrentTicket, currentTicket]
   );
 
   const handleSubmit: SubmitHandler<TicketFormValues> = useCallback(
     (data) => {
-      const total = data.price * data.numberOfTickets;
-      console.log("Form submitted. Data:", { ...data, total });
+      const total = Number(data.price) * Number(data.numberOfTickets); // Ensure numbers
       onSubmit({ ...data, total });
     },
     [onSubmit]
   );
+
   return (
     <Form {...form}>
       <form
@@ -270,7 +253,6 @@ const TicketSelection = ({
               <Select
                 value={field.value?.toString() ?? "1"}
                 onValueChange={(value) => {
-                  console.log("Number of tickets selected:", value);
                   field.onChange(Number(value));
                   updateCurrentTicket({
                     ...form.getValues(),

@@ -1,9 +1,14 @@
 import React from "react";
 import TheTicketComponent from "./TheTicketComponent";
 import { useTicketStore } from "../../store";
+import { redirect } from "next/navigation";
 
 const TicketSection = () => {
   const { currentTicket } = useTicketStore();
+
+  if (!currentTicket) {
+    redirect("/");
+  }
   if (!currentTicket) {
     return <div>No ticket details available.</div>;
   }

@@ -128,7 +128,7 @@ const HomePageContent = () => {
       case 3:
         return (
           <div className="text-white w-full">
-            <h2 >Your Ticket is Booked</h2>
+            <h2 className="font-extrabold">Your Ticket is Booked</h2>
             <p>You can download or Check your email for a copy</p>
             <TicketSection />
           </div>
