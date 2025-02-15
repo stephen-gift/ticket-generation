@@ -115,7 +115,10 @@ const HomePageContent = () => {
         return (
           <TicketSelection
             onSubmit={handleTicketSubmit}
-            onValidityChange={(isValid) => setIsTicketFormValid(isValid)}
+            onValidityChange={(isValid) => {
+              console.log("Ticket form validity:", isValid);
+              setIsTicketFormValid(isValid);
+            }}
           />
         );
       case 2:

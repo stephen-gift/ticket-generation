@@ -9,10 +9,8 @@ const TicketHistoryPage = () => {
   const { getTicketHistory } = useTicketStore();
   const tickets = getTicketHistory();
 
-  // State for search term
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter tickets based on search term (name or email)
   const filteredTickets = tickets.filter((ticket) => {
     const nameMatch = ticket.attendee?.name
       ?.toLowerCase()

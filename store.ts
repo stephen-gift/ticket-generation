@@ -1,5 +1,3 @@
-// types.ts
-
 export interface Ticket {
   id: string;
   event: Event;
@@ -26,6 +24,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Event } from "./types";
 import { AttendeeFormValues } from "@/lib/schema";
+import { TICKETS } from "@/components/TicketSelection";
 
 export const useTicketStore = create<TicketStore>()(
   persist(
@@ -36,15 +35,20 @@ export const useTicketStore = create<TicketStore>()(
       addTicket: (ticket) =>
         set((state) => ({
           tickets: [...state.tickets, ticket]
-          // currentTicket: null
         })),
 
       updateCurrentTicket: (data) => {
-        console.log("Updating current ticket with explicit fields:", data);
+        const selectedTicket = TICKETS.find(
+          (ticket) => ticket.type === data.ticketType
+        );
+        const total =
+          (selectedTicket?.price ?? 0) * (data.numberOfTickets ?? 1);
+
         set((state) => ({
           currentTicket: {
             ...state.currentTicket,
-            ...data
+            ...data,
+            total
           }
         }));
       },

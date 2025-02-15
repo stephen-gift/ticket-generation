@@ -21,7 +21,8 @@ const TicketOption = ({
       )}
     >
       <div className={cn("rounded-md text-sm font-semibold")}>
-        {price === 0 ? "Free" : `$${price}`}
+        {price === 0 ? "Free" : `$ ${price}`}
+        {/* {`$ ${price}`} */}
       </div>
       <div className="flex flex-col">
         <p className="font-normal uppercase  font-roboto text-base">{type}</p>

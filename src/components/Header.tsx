@@ -31,7 +31,7 @@ const Header = () => {
             <Image src="/images/Logo.png" alt="logo" width={92} height={36} />
           </DrawerTrigger>
           <DrawerContent className="bg-[#0C212B] text-white p-6 ">
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+            <DrawerTitle>Tickets</DrawerTitle>
             <nav className="flex flex-col gap-4">
               {navItems.map(({ title, href }) => (
                 <Link

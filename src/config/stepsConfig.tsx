@@ -1,4 +1,3 @@
-// steps-config.ts
 export const STEPS = [
   {
     title: "Ticket Selection",

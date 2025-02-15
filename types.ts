@@ -16,8 +16,6 @@ export type TicketType = {
 export type TicketSelectionData = {
   event: Event;
   ticketType: string;
-  price: number;
-  remaining: number;
   numberOfTickets: number;
   total: number;
 };

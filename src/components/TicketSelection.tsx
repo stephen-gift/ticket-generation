@@ -30,13 +30,13 @@ import {
 } from "./ui/select";
 import { useTicketStore } from "../../store";
 
-const TICKETS: TicketType[] = [
+export const TICKETS: TicketType[] = [
   { type: "REGULAR ACCESS", price: 0, remaining: 20 },
   { type: "VIP ACCESS", price: 50, remaining: 20 },
   { type: "VVIP ACCESS", price: 150, remaining: 20 }
 ];
 
-const EVENTS: Event[] = [
+export const EVENTS: Event[] = [
   {
     name: "Techember Fest '25",
     location: "Tech City Convention Center",
@@ -79,10 +79,8 @@ const TicketSelection = ({
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketSchema),
     defaultValues: currentTicket ?? {
-      event: EVENTS[2],
+      event: EVENTS[0],
       ticketType: "",
-      price: 0,
-      remaining: 0,
       numberOfTickets: 1
     },
     mode: "onChange"
@@ -93,13 +91,11 @@ const TicketSelection = ({
       form.reset({
         event: currentTicket.event ?? EVENTS[0],
         ticketType: currentTicket.ticketType ?? "",
-        price: currentTicket.price ?? 0,
         numberOfTickets: currentTicket.numberOfTickets
       });
     }
   }, [currentTicket, form]);
 
-  // Handle carousel initialization and event sync
   useEffect(() => {
     if (!carouselApi || !currentTicket?.event) return;
 
@@ -116,7 +112,6 @@ const TicketSelection = ({
     }
   }, [carouselApi, currentTicket?.event]);
 
-  // Carousel change handler
   const handleCarouselChange = useCallback(() => {
     if (!carouselApi) return;
     const selectedIndex = carouselApi.selectedScrollSnap();
@@ -129,7 +124,6 @@ const TicketSelection = ({
     });
   }, [carouselApi, form, updateCurrentTicket, currentTicket]);
 
-  // Setup carousel event listeners
   useEffect(() => {
     if (!carouselApi) return;
 
@@ -141,8 +135,18 @@ const TicketSelection = ({
 
   useEffect(() => {
     const subscription = form.watch(async (data) => {
+      const isValid = form.formState.isValid;
+      console.log("Form values:", data);
+      console.log("Form errors:", form.formState.errors);
+      console.log("Form isValid:", isValid);
+      onValidityChange?.(isValid);
+
       if (form.formState.isValid) {
-        const total = (data.price ?? 0) * (data.numberOfTickets ?? 1);
+        const selectedTicket = TICKETS.find(
+          (ticket) => ticket.type === data.ticketType
+        );
+        const total =
+          (selectedTicket?.price ?? 0) * (data.numberOfTickets ?? 1);
 
         const safeEvent: Event = {
           name: data.event?.name ?? "",
@@ -154,39 +158,45 @@ const TicketSelection = ({
         updateCurrentTicket({
           event: safeEvent,
           ticketType: data.ticketType,
-          price: data.price,
           numberOfTickets: data.numberOfTickets,
           total
         });
-      } else {
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [form, updateCurrentTicket]);
+  }, [form, updateCurrentTicket, onValidityChange]);
 
   useEffect(() => {
     const values = form.getValues();
-    const isValid = !!values.ticketType && !!values.price;
+    const isValid =
+      !!values.ticketType && !!values.event && !!values.numberOfTickets;
     onValidityChange?.(isValid);
   }, [form, onValidityChange]);
 
   const handleTicketSelect = useCallback(
     (ticket: TicketType) => {
       form.setValue("ticketType", ticket.type);
-      form.setValue("price", Number(ticket.price));
+
+      const total = ticket.price * (form.getValues().numberOfTickets ?? 1);
+
       updateCurrentTicket({
         ...currentTicket,
         ticketType: ticket.type,
-        price: Number(ticket.price)
+        total
       });
+      form.trigger();
     },
     [form, updateCurrentTicket, currentTicket]
   );
 
   const handleSubmit: SubmitHandler<TicketFormValues> = useCallback(
     (data) => {
-      const total = Number(data.price) * Number(data.numberOfTickets); // Ensure numbers
+      const selectedTicket = TICKETS.find(
+        (ticket) => ticket.type === data.ticketType
+      );
+      const total = (selectedTicket?.price ?? 0) * (data.numberOfTickets ?? 1);
+
       onSubmit({ ...data, total });
     },
     [onSubmit]
@@ -231,6 +241,7 @@ const TicketSelection = ({
                   <TicketOption
                     key={ticket.type}
                     {...ticket}
+                    price={ticket.price === 10 ? 0 : ticket.price}
                     isSelected={field.value === ticket.type}
                     onSelect={() => handleTicketSelect(ticket)}
                   />
@@ -256,8 +267,7 @@ const TicketSelection = ({
                   field.onChange(Number(value));
                   updateCurrentTicket({
                     ...form.getValues(),
-                    numberOfTickets: Number(value),
-                    total: form.getValues().price * Number(value)
+                    numberOfTickets: Number(value)
                   });
                 }}
               >
