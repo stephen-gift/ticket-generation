@@ -62,23 +62,34 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center gap-8 p-6 w-full bg-[#052228] rounded-3xl ">
-      <h2 className="text-lg font-semibold text-white text-start w-full text-white-pure">
+    <div
+      className="flex flex-col justify-center items-center gap-8 p-6 w-full bg-[#052228] rounded-3xl "
+      aria-labelledby="upload-title"
+    >
+      <h2
+        id="upload-title"
+        className="text-lg font-semibold text-white text-start w-full text-white-pure"
+      >
         Upload Profile Photo
       </h2>
       <div className="w-full bg-[#00000033] flex justify-center items-center">
         <div
           className="border-2 border-[rgba(36, 160, 181, 0.50)] w-full text-white-pure max-w-64 h-64 flex flex-col items-center justify-center rounded-[32px] cursor-pointer hover:bg-[#0E464Fe7] transition relative  border-4 border-[rgba(36,160,181,0.50)] bg-[#0E464F]"
           {...getRootProps()}
+          tabIndex={0} // Ensure it's keyboard navigable
+          role="button"
+          aria-label="Upload an image by clicking or dragging"
         >
-          <input {...getInputProps()} />
+          <input {...getInputProps()} aria-describedby="upload-desc" />
           {!image ? (
             loading ? (
               <Loader2 className="animate-spin text-teal-500 w-8 h-8" />
             ) : (
               <>
                 <UploadCloud className="text-teal-400 w-8 h-8" />
-                <p className="mt-2 text-sm">Drag & drop or click to upload</p>
+                <p id="upload-desc" className="mt-2 text-sm">
+                  Drag & drop or click to upload
+                </p>
               </>
             )
           ) : (
@@ -89,7 +100,10 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
                 fill
                 className="object-cover rounded-[32px]"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity rounded-[32px]">
+              <div
+                role="presentation"
+                className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity rounded-[32px]"
+              >
                 <UploadCloud className="text-teal-400 w-8 h-8" />
                 <p className="mt-2 text-sm text-white">Click to change</p>
               </div>
@@ -107,6 +121,7 @@ const ImageUploader = ({ onImageUpload, initialImage }: ImageUploaderProps) => {
                     }
                   });
                 }}
+                aria-label="Remove uploaded image"
                 className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
               >
                 <Trash2 className="w-4 h-4" />

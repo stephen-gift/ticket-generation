@@ -201,11 +201,25 @@ const TicketSelection = ({
       >
         {/* Carousel Section */}
         <div className="w-full flex flex-col items-center p-2 sm:p-6  justify-center border-r-2 border-b-2 border-l-2 border-[#07373F] rounded-[24px] backdrop-blur-[7px]">
-          <Carousel className="w-full max-w-lg mx-auto" setApi={setCarouselApi}>
+          <Carousel
+            className="w-full max-w-lg mx-auto"
+            setApi={setCarouselApi}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowLeft") {
+                carouselApi?.scrollPrev(); // Navigate left with keyboard
+              } else if (e.key === "ArrowRight") {
+                carouselApi?.scrollNext(); // Navigate right with keyboard
+              }
+            }}
+          >
             <CarouselContent>
               {EVENTS.map((event, index) => (
                 <CarouselItem key={index}>
-                  <div className="">
+                  <div
+                    tabIndex={0}
+                    role="group"
+                    aria-label={`Event ${index + 1}`}
+                  >
                     <EventBanner event={event} />
                   </div>
                 </CarouselItem>
@@ -223,10 +237,17 @@ const TicketSelection = ({
           name="ticketType"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="text-white font-roboto">
+              <FormLabel
+                className="text-white font-roboto"
+                id="ticket-type-label"
+              >
                 Select Ticket Type:
               </FormLabel>
-              <div className="rounded-[24px] bg-[#052228] border border-[#07373F] p-3 flex flex-col md:flex-row self-stretch gap-6 ">
+              <div
+                role="group" // Added role for grouping
+                aria-labelledby="ticket-type-label" // Associates the label with the group
+                className="rounded-[24px] bg-[#052228] border border-[#07373F] p-3 flex flex-col md:flex-row self-stretch gap-6"
+              >
                 {TICKETS.map((ticket) => (
                   <TicketOption
                     key={ticket.type}
@@ -237,7 +258,7 @@ const TicketSelection = ({
                   />
                 ))}
               </div>
-              <FormMessage />
+              <FormMessage aria-live="polite" />
             </FormItem>
           )}
         />
@@ -257,7 +278,6 @@ const TicketSelection = ({
                   const numTickets = Number(value);
                   field.onChange(numTickets);
 
-                  // Update store with current values
                   const selectedTicket = TICKETS.find(
                     (ticket) => ticket.type === form.getValues().ticketType
                   );
@@ -271,7 +291,10 @@ const TicketSelection = ({
                 }}
               >
                 <FormControl>
-                  <SelectTrigger className="w-full border border-[#07373F] text-white rounded-[12px] ">
+                  <SelectTrigger
+                    className="w-full border border-[#07373F] text-white rounded-[12px]"
+                    aria-label="Number of tickets" // Added aria-label
+                  >
                     <SelectValue placeholder="Select number" />
                   </SelectTrigger>
                 </FormControl>
@@ -283,7 +306,7 @@ const TicketSelection = ({
                   ))}
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage aria-live="polite" />
             </FormItem>
           )}
         />

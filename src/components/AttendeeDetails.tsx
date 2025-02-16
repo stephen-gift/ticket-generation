@@ -94,6 +94,7 @@ const AttendeeDetails = ({
             form.setValue("image", url);
           }}
           initialImage={currentTicket?.attendee?.image}
+          aria-label="Upload attendee image"
         />
 
         <FormField
@@ -101,15 +102,20 @@ const AttendeeDetails = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Enter your name</FormLabel>
+              <FormLabel className="text-white" id="name-label">
+                Enter your name
+              </FormLabel>
               <FormControl>
                 <Input
                   className="text-white"
                   placeholder="Your name"
                   {...field}
+                  aria-labelledby="name-label"
+                  aria-describedby="name-error"
+                  aria-invalid={!!form.formState.errors.name}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage id="name-error" aria-live="polite" />
             </FormItem>
           )}
         />
@@ -119,21 +125,27 @@ const AttendeeDetails = ({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Enter your email *</FormLabel>
+              <FormLabel className="text-white" id="email-label">
+                Enter your email *
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Mail
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={18}
+                    aria-hidden="true"
                   />
                   <Input
                     className="pl-10 text-white"
                     placeholder="hello@example.com"
                     {...field}
+                    aria-labelledby="email-label"
+                    aria-describedby="email-error"
+                    aria-invalid={!!form.formState.errors.email}
                   />
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage id="email-error" aria-live="polite" />
             </FormItem>
           )}
         />
@@ -143,15 +155,20 @@ const AttendeeDetails = ({
           name="request"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Special request?</FormLabel>
+              <FormLabel className="text-white" id="request-label">
+                Special request?
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className="text-white"
                   placeholder="Your message..."
                   {...field}
+                  aria-labelledby="request-label"
+                  aria-describedby="request-error"
+                  aria-invalid={!!form.formState.errors.request}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage id="request-error" aria-live="polite" />
             </FormItem>
           )}
         />
